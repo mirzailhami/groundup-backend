@@ -8,21 +8,12 @@ router.get("/anomalies", async (req, res) => {
 });
 
 router.put("/anomaly/:id", async (req, res) => {
-  const { id } = req.params;
-  const { reason, action, comments } = req.body;
+  const id = req.params.id;
+  const options = { new: true };
 
   try {
-    const updatedAnomaly = await anomaly.updateOne(
-      { id },
-      {
-        $set: {
-          reason,
-          action,
-          comments,
-        },
-      }
-    );
-    res.json(updatedAnomaly);
+    const result = await anomaly.findByIdAndUpdate(id, req.body, options);
+    res.json(result);
   } catch (error) {
     res.json({ error: `Anomaly with ID ${id} does not exist in the database` });
   }
